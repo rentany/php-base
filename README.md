@@ -60,6 +60,27 @@ COPY . .
 
 ## Publishing
 
+### CI image
+
+`ghcr.io/rentany/php-base:ci-php8.5` extends the public runtime image with
+PDO SQLite, Imagick, Node 22 and npm, GitHub CLI, jq and ShellCheck. It contains
+no application source or secrets. PHP's CI memory limit is 512M and Xdebug is
+absent. The production runtime tag is unchanged.
+
+The **Publish CI image** workflow runs on GitHub Ubuntu runners when
+`Dockerfile.ci` changes, on demand, and monthly. It upgrades Wolfi libraries
+before adding packages, smoke-tests the candidate, and pushes that exact image
+with rolling and dated commit tags. Consumers should pin its published digest.
+Publishing uses the repository's built-in `GITHUB_TOKEN`; pulls are anonymous
+because this package is public.
+
+Blacksmith container jobs can use it directly. Set `defaults.run.shell: bash`;
+Redis service containers are addressed by their service name rather than
+`localhost`. Node 22 is already on `PATH`, so `actions/setup-node` can manage
+the npm cache without a `node-version` input or another runtime installation.
+
+### Runtime image
+
 The **Publish** workflow builds with `--no-cache`, verifies `php -v`, `composer`, `php-fpm`,
 `nginx` and every required extension, and only then pushes. A base that can't start PHP fails
 the run instead of reaching the registry.
