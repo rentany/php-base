@@ -54,6 +54,8 @@ jobs:
             npm --version
             gh --version
             shellcheck --version
+            tar --version | grep "GNU tar"
+            zstd --version
           '
 
       # Push the tested image itself rather than rebuilding against moving packages.
