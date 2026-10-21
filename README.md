@@ -63,7 +63,8 @@ COPY . .
 ### CI image
 
 `ghcr.io/rentany/php-base:ci-php8.5` extends the public runtime image with
-PDO SQLite, Imagick, Node 22 and npm, GitHub CLI, jq and ShellCheck. It contains
+PDO SQLite, Imagick, Node 22 and npm, GitHub CLI, jq, ShellCheck and the AWS CLI (the
+application CI copies built assets to Cloudflare R2 with `aws s3 cp`). It contains
 no application source or secrets. PHP's CI memory limit is 512M and Xdebug is
 absent. The production runtime tag is unchanged.
 

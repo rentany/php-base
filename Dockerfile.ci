@@ -6,11 +6,11 @@ RUN mkdir -p /opt/gnu-tar/lib && cp /usr/bin/tar /opt/gnu-tar/tar && \
 FROM ghcr.io/rentany/php-base:php8.5
 
 LABEL org.opencontainers.image.source="https://github.com/rentany/php-base" \
-      org.opencontainers.image.description="PHP 8.5 CI tools for rentany: SQLite, Imagick, Node 22, Composer, GitHub CLI and ShellCheck"
+      org.opencontainers.image.description="PHP 8.5 CI tools for rentany: SQLite, Imagick, Node 22, Composer, GitHub CLI, ShellCheck and the AWS CLI"
 
 # Upgrade the frozen runtime libraries before adding packages from rolling Wolfi.
 RUN apk upgrade --no-cache && apk add --no-cache \
-    php-8.5-pdo_sqlite php-8.5-imagick gh jq zstd
+    php-8.5-pdo_sqlite php-8.5-imagick gh jq zstd aws-cli-2
 
 # Pest loads the entire suite before starting workers; PHP's 128M default is too small.
 RUN printf 'memory_limit=512M\n' > /etc/php/conf.d/99-ci.ini
@@ -37,7 +37,8 @@ RUN set -eux; \
     node --version; \
     npm --version; \
     gh --version; \
-    shellcheck --version
+    shellcheck --version; \
+    aws --version
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 WORKDIR /workspace
